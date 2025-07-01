@@ -4,10 +4,10 @@ const NOTION_API_KEY = scriptProperties.getProperty('NOTION_API_KEY');
 const NOTION_DATABASE_ID = scriptProperties.getProperty('NOTION_DATABASE_ID');
 const NOTION_VERSION = scriptProperties.getProperty('NOTION_VERSION');
 
-// 
+// Notionのカレンダー(データベース形式)情報の取得
 function getNotionCalender() {
   // Notion APIのエンドポイントURLを作成
-  const url = `https://api.notion.com/v1/databases/${NOTION_DATABASE_ID}`;
+  const url = `https://api.notion.com/v1/databases/${NOTION_DATABASE_ID}/query`;
 
   // 送信するリクエストのヘッダー情報を作成
   const headers = {
@@ -16,8 +16,9 @@ function getNotionCalender() {
   };
 
   // リクエストのオプションを設定
+  // queryの場合はPOSTメソッドを使用　
   const options = {
-    'method': 'get',
+    'method': 'post',
     'headers': headers,
     'muteHttpExceptions': true // エラー時に例外をスローせず、レスポンスを返す
   };
@@ -25,7 +26,7 @@ function getNotionCalender() {
   try {
     // APIにリクエストを送信
     const response = UrlFetchApp.fetch(url, options);
-    
+
     // レスポンスのHTTPステータスコードを確認
     const responseCode = response.getResponseCode();
     // レスポンスの本文を取得
@@ -38,7 +39,7 @@ function getNotionCalender() {
       // 成功した場合、JSONをパースして見やすく表示
       const jsonResponse = JSON.parse(responseBody);
       Logger.log(JSON.stringify(jsonResponse, null, 2));
-      console.log("✅ Notionデータベースの情報を正常に取得しました。");
+      console.log("✅ Notionデータベースのページ情報を正常に取得しました。");
     } else {
       // エラーの場合、エラーメッセージを表示
       Logger.log(`Error: ${responseBody}`);
