@@ -8,6 +8,12 @@ const NOTION_VERSION = scriptProperties.getProperty('NOTION_VERSION');
 function getNotionCalender() {
   // Notion APIのエンドポイントURLを作成
   const url = `https://api.notion.com/v1/databases/${NOTION_DATABASE_ID}/query`;
+  
+  // 今日の日付を取得
+  const now = new Date();
+  const nowDate = Utilities.formatDate(now, 'JST', 'yyyy-MM-dd');
+
+  Logger.log(nowDate)
 
   // 送信するリクエストのヘッダー情報を作成
   const headers = {
@@ -41,16 +47,18 @@ function getNotionCalender() {
       Logger.log(JSON.stringify(jsonResponse, null, 2));
       console.log("✅ Notionデータベースのページ情報を正常に取得しました。");
 
+      filterDate = nowDate
       // results配列の中の各ページ（イベント）をループ処理
       jsonResponse.results.forEach(page => {
         // 「名前」プロパティが存在し、かつtitle配列に中身があるかチェック
-        if (page.properties.名前 && page.properties.名前.title.length > 0 && page.properties.日付.date.start == "2025-07-02") {
+        if (page.properties.名前 && page.properties.名前.title.length > 0 
+            && (page.properties.日付.date.start == filterDate)) {
           
           // 予定の名前を取得
           const eventName = page.properties.名前.title[0].plain_text;
           
           // ログに出力
-          Logger.log("イベント名"+eventName); // "実験" と出力される
+          Logger.log("イベント名: "+eventName); // "実験" と出力される
         }
       });
     } else {
