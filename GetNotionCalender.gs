@@ -15,22 +15,11 @@ function getNotionCalender() {
     'Notion-Version': NOTION_VERSION,
   };
 
-    // フィルター条件を作成
-  const filterPayload = {
-    "filter": {
-      "property": "日付", // フィルター対象のプロパティ名
-      "date": {
-        "equals": "2025-07-02" // 取得したい日付
-      }
-    }
-  };
-
   // リクエストのオプションを設定
   // queryの場合はPOSTメソッドを使用　
   const options = {
     'method': 'post',
     'headers': headers,
-    'payload': JSON.stringify(filterPayload), // フィルター条件をペイロードとして送信
     'muteHttpExceptions': true // エラー時に例外をスローせず、レスポンスを返す
   };
 
@@ -55,7 +44,7 @@ function getNotionCalender() {
       // results配列の中の各ページ（イベント）をループ処理
       jsonResponse.results.forEach(page => {
         // 「名前」プロパティが存在し、かつtitle配列に中身があるかチェック
-        if (page.properties.名前 && page.properties.名前.title.length > 0) {
+        if (page.properties.名前 && page.properties.名前.title.length > 0 && page.properties.日付.date.start == "2025-07-02") {
           
           // 予定の名前を取得
           const eventName = page.properties.名前.title[0].plain_text;
