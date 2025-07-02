@@ -15,11 +15,22 @@ function getNotionCalender() {
     'Notion-Version': NOTION_VERSION,
   };
 
+    // フィルター条件を作成
+  const filterPayload = {
+    "filter": {
+      "property": "日付", // フィルター対象のプロパティ名
+      "date": {
+        "equals": "2025-07-02" // 取得したい日付
+      }
+    }
+  };
+
   // リクエストのオプションを設定
   // queryの場合はPOSTメソッドを使用　
   const options = {
     'method': 'post',
     'headers': headers,
+    'payload': JSON.stringify(filterPayload), // フィルター条件をペイロードとして送信
     'muteHttpExceptions': true // エラー時に例外をスローせず、レスポンスを返す
   };
 
