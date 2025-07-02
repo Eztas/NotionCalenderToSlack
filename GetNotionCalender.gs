@@ -51,6 +51,19 @@ function getNotionCalender() {
       const jsonResponse = JSON.parse(responseBody);
       Logger.log(JSON.stringify(jsonResponse, null, 2));
       console.log("✅ Notionデータベースのページ情報を正常に取得しました。");
+
+      // results配列の中の各ページ（イベント）をループ処理
+      jsonResponse.results.forEach(page => {
+        // 「名前」プロパティが存在し、かつtitle配列に中身があるかチェック
+        if (page.properties.名前 && page.properties.名前.title.length > 0) {
+          
+          // 予定の名前を取得
+          const eventName = page.properties.名前.title[0].plain_text;
+          
+          // ログに出力
+          Logger.log("イベント名"+eventName); // "実験" と出力される
+        }
+      });
     } else {
       // エラーの場合、エラーメッセージを表示
       Logger.log(`Error: ${responseBody}`);
