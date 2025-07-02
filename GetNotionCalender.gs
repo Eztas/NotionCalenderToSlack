@@ -17,6 +17,8 @@ function getNotionCalender() {
   const nowFormatDate = Utilities.formatDate(nowDate, 'JST', 'yyyy-MM-dd');
   const remindFormatDate = Utilities.formatDate(remindDate, 'JST', 'yyyy-MM-dd');
 
+  // リマインド用キーワード
+  remindKeywords = ["実験"]
   // 送信するリクエストのヘッダー情報を作成
   const headers = {
     'Authorization': `Bearer ${NOTION_API_KEY}`,
@@ -57,9 +59,14 @@ function getNotionCalender() {
           
           // 予定の名前を取得
           const eventName = page.properties.名前.title[0].plain_text;
-          
-          // ログに出力
-          Logger.log("イベント名: "+eventName); // "実験" と出力される
+
+          // キーワードを満たすものがあれば実行
+          remindKeywords.forEach(remindKeyword =>{
+            if(eventName.includes(remindKeyword)){
+              // ログに出力
+              Logger.log("イベント名: "+eventName); // "実験" と出力される
+            }
+          })
         }
       });
     } else {
